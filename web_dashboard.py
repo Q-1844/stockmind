@@ -120,8 +120,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
       <div id="watchlist"></div>
       <div class="add-form" style="margin-top:10px">
         <input id="addSymbol" placeholder="输入代码如 AAPL" maxlength="10">
-        <button onclick="addWatchlist()">添加</button>
+        <button onclick="analyzeInput()">分析</button>
       </div>
+      <button class="add-form" style="margin-top:6px;width:100%;padding:8px;background:transparent;border:1px dashed var(--border);color:var(--dim);cursor:pointer;border-radius:var(--radius);font-size:12px" onclick="addWatchlist()">+ 添加到关注列表</button>
     </div>
     <div>
       <h2>🧭 导航</h2>
@@ -134,7 +135,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
   <main class="main">
     <div id="panelAnalysis" class="panel">
       <h3>📊 股票分析</h3>
-      <div id="analysisContent"><p style="color:var(--dim)">从关注列表选择股票或输入代码开始分析</p></div>
+      <div style="display:flex;gap:8px;margin-bottom:16px;align-items:center;background:var(--surface);padding:14px;border-radius:var(--radius);border:1px solid var(--border)">
+        <span style="font-size:18px">🔍</span>
+        <input id="analyzeInput" placeholder="输入股票代码 (AAPL, TSLA, NVDA, 0700.HK)" style="flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--text);outline:none;font-size:15px" onkeydown="if(event.key==='Enter')quickAnalyze()">
+        <button onclick="quickAnalyze()" style="padding:10px 24px;border:none;border-radius:var(--radius);background:var(--accent);color:#000;font-weight:700;cursor:pointer;font-size:14px">▶ 分析</button>
+        <span id="quickSymbol" style="color:var(--dim);font-size:12px"></span>
+      </div>
+      <div id="analysisContent"><p style="color:var(--dim);padding:20px;text-align:center">在输入框中输入股票代码（如 AAPL），按 Enter 或点击「分析」按钮开始</p></div>
     </div>
     <div id="panelDecisions" class="panel" style="display:none">
       <h3>📝 决策历史</h3>
@@ -201,6 +208,22 @@ async function analyze(symbol){
   if(data.error){el.innerHTML=`<p style="color:var(--red)">分析失败: ${data.error}</p>`;return}
   renderAnalysis(data,el);
   resetRefresh();
+}
+
+function quickAnalyze(){
+  const inp=document.getElementById('analyzeInput');
+  const sym=inp.value.trim().toUpperCase();
+  if(!sym)return;
+  inp.value='';
+  analyze(sym);
+}
+
+function analyzeInput(){
+  const inp=document.getElementById('addSymbol');
+  const sym=inp.value.trim().toUpperCase();
+  if(!sym)return;
+  inp.value='';
+  analyze(sym);
 }
 
 function renderAnalysis(d,el){
