@@ -12,8 +12,8 @@ LLM_PROVIDER = os.getenv("LLM_PROVIDER", "minimax")  # minimax / openai / deepse
 LLM_CONFIG = {
     "minimax": {
         "api_key": os.getenv("MINIMAX_API_KEY", ""),
-        "base_url": "https://api.minimax.chat/v1",
-        "model": "MiniMax-Text-01",
+        "base_url": os.getenv("MINIMAX_BASE_URL", "https://token-plan-cn.xiaomimimo.com/v1"),
+        "model": os.getenv("MINIMAX_MODEL", "mimo-v2.5-pro"),
         "max_tokens": 2048,
         "temperature": 0.3,
     },
