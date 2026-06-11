@@ -261,7 +261,25 @@ class StockMindAgent:
 
     # ─── Web 仪表盘 ───────────────────────────────────────────
     def web(self) -> None:
-        print(_c(Color.YELLOW, "  ⚠️  Web 仪表盘功能开发中，敬请期待"))
+        try:
+            import config
+            from web_dashboard import StockMindWebDashboard
+            dashboard = StockMindWebDashboard(self)
+            print(_c(Color.GREEN, "  ✅ Web 仪表盘已启动"))
+            print(_c(Color.CYAN, f"  🌐 访问 http://localhost:{config.WEB_PORT}"))
+            print(_c(Color.YELLOW, "  按 Ctrl+C 停止"))
+            dashboard.start()
+            import time
+            try:
+                while True:
+                    time.sleep(1)
+            except KeyboardInterrupt:
+                dashboard.stop()
+                print(_c(Color.YELLOW, "\n  👋 Web 仪表盘已停止"))
+        except Exception as e:
+            print(_c(Color.RED, f"  ❌ Web 启动失败: {e}"))
+            import traceback
+            traceback.print_exc()
 
     # ═══════════════════════════════════════════════════════════
     # 内部方法：格式化输出
